@@ -1,4 +1,3 @@
-
 export type Json =
   | string
   | number
@@ -13,42 +12,48 @@ export interface Database {
       users: {
         Row: {
           id: string
-          name: string
+          created_at: string
+          email: string
+          full_name: string
+          avatar_url: string
+          role: 'student' | 'parent' | 'teacher' | 'admin'
           age: number | null
           gender: string | null
           language: string | null
           village: string | null
           district: string | null
           mobile: string | null
-          created_at: string
           updated_at: string | null
-          auth_id: string | null
         }
         Insert: {
-          id?: string
-          name: string
+          id: string
+          created_at?: string
+          email: string
+          full_name: string
+          avatar_url?: string
+          role?: 'student' | 'parent' | 'teacher' | 'admin'
           age?: number | null
           gender?: string | null
           language?: string | null
           village?: string | null
           district?: string | null
           mobile?: string | null
-          created_at?: string
           updated_at?: string | null
-          auth_id?: string | null
         }
         Update: {
           id?: string
-          name?: string
+          created_at?: string
+          email?: string
+          full_name?: string
+          avatar_url?: string
+          role?: 'student' | 'parent' | 'teacher' | 'admin'
           age?: number | null
           gender?: string | null
           language?: string | null
           village?: string | null
           district?: string | null
           mobile?: string | null
-          created_at?: string
           updated_at?: string | null
-          auth_id?: string | null
         }
       }
       education: {
@@ -60,6 +65,7 @@ export interface Database {
           institution: string
           percentage: string
           created_at: string
+          updated_at: string | null
         }
         Insert: {
           id?: string
@@ -69,6 +75,7 @@ export interface Database {
           institution: string
           percentage: string
           created_at?: string
+          updated_at?: string | null
         }
         Update: {
           id?: string
@@ -78,6 +85,7 @@ export interface Database {
           institution?: string
           percentage?: string
           created_at?: string
+          updated_at?: string | null
         }
       }
       user_skills: {
@@ -123,42 +131,39 @@ export interface Database {
       opportunities: {
         Row: {
           id: string
+          created_at: string
           title: string
+          description: string
           organization: string
           location: string
-          category: string
-          description: string
+          type: 'scholarship' | 'internship' | 'job' | 'workshop'
           deadline: string
-          application_url: string
-          email: string
-          phone: string
-          created_at: string
+          requirements: string[]
+          contact_email: string
         }
         Insert: {
           id?: string
+          created_at?: string
           title: string
+          description: string
           organization: string
           location: string
-          category: string
-          description: string
+          type: 'scholarship' | 'internship' | 'job' | 'workshop'
           deadline: string
-          application_url: string
-          email: string
-          phone: string
-          created_at?: string
+          requirements: string[]
+          contact_email: string
         }
         Update: {
           id?: string
+          created_at?: string
           title?: string
+          description?: string
           organization?: string
           location?: string
-          category?: string
-          description?: string
+          type?: 'scholarship' | 'internship' | 'job' | 'workshop'
           deadline?: string
-          application_url?: string
-          email?: string
-          phone?: string
-          created_at?: string
+          requirements?: string[]
+          contact_email?: string
         }
       }
       opportunity_tags: {
@@ -204,42 +209,30 @@ export interface Database {
       success_stories: {
         Row: {
           id: string
-          name: string
-          age: number
-          location: string
-          image: string
-          story: string
-          occupation: string
-          background: string
-          journey: string
-          advice: string
           created_at: string
+          title: string
+          content: string
+          author_id: string
+          image_url: string | null
+          tags: string[]
         }
         Insert: {
           id?: string
-          name: string
-          age: number
-          location: string
-          image: string
-          story: string
-          occupation: string
-          background: string
-          journey: string
-          advice: string
           created_at?: string
+          title: string
+          content: string
+          author_id: string
+          image_url?: string | null
+          tags?: string[]
         }
         Update: {
           id?: string
-          name?: string
-          age?: number
-          location?: string
-          image?: string
-          story?: string
-          occupation?: string
-          background?: string
-          journey?: string
-          advice?: string
           created_at?: string
+          title?: string
+          content?: string
+          author_id?: string
+          image_url?: string | null
+          tags?: string[]
         }
       }
       parents_guides: {

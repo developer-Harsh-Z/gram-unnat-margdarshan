@@ -1,49 +1,95 @@
-
 import { createClient } from '@supabase/supabase-js';
 import { Database } from '@/types/supabase-types';
 
-// Default values for development - these will be used if env vars aren't set
-const DEFAULT_SUPABASE_URL = 'https://iiydujuzoaidwmjzpgvr.supabase.co';
-const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlpeWR1anV6b2FpZHdtanpwZ3ZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTU5NTIzMDQsImV4cCI6MjAzMTUyODMwNH0.teewdIB3VN-t7D4P_h1V-fdW7Jdf7SQFZG6ltTJ2TbM';
-
 // Get environment variables
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || DEFAULT_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || DEFAULT_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Check for missing values and log warnings
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.warn('Using default Supabase credentials. For production, please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error('Missing Supabase environment variables. Please check your .env file.');
 }
 
-// Create Supabase client
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+// Create Supabase client with error handling
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  }
+});
 
-// Auth helpers
+// Test the connection and log any errors
+const testConnection = async () => {
+  try {
+    const { data: { session }, error } = await supabase.auth.getSession();
+    if (error) {
+      console.error('Supabase connection error:', error.message);
+      throw error;
+    }
+    console.log('Supabase connected successfully');
+    return session;
+  } catch (error) {
+    console.error('Failed to connect to Supabase:', error);
+    throw error;
+  }
+};
+
+// Initialize connection
+testConnection().catch(console.error);
+
+// Auth helpers with better error handling
 export const signUp = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
-  return { data, error };
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Sign up error:', error);
+    return { data: null, error };
+  }
 };
 
 export const signIn = async (email: string, password: string) => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
-  return { data, error };
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error('Sign in error:', error);
+    return { data: null, error };
+  }
 };
 
 export const signOut = async () => {
-  const { error } = await supabase.auth.signOut();
-  return { error };
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    return { error: null };
+  } catch (error) {
+    console.error('Sign out error:', error);
+    return { error };
+  }
 };
 
 export const getCurrentUser = async () => {
-  const { data, error } = await supabase.auth.getSession();
-  return { 
-    user: data?.session?.user || null,
-    error 
-  };
+  try {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) throw error;
+    return { 
+      user: data?.session?.user || null,
+      error: null 
+    };
+  } catch (error) {
+    console.error('Get current user error:', error);
+    return { 
+      user: null,
+      error 
+    };
+  }
 };
