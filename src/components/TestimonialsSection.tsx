@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -8,14 +7,14 @@ const TestimonialsSection = () => {
       name: "Anitha K",
       location: "Raichur",
       image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80",
-      quote: "RuralPath helped me find a vocational training program in healthcare that I didn't know existed. Now I work at a primary health center near my village.",
+      quote: "NammaDisha helped me find a vocational training program in healthcare that I didn't know existed. Now I work at a primary health center near my village.",
       role: "Healthcare Worker"
     },
     {
       name: "Prakash M",
       location: "Bijapur",
       image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80",
-      quote: "I was able to connect with a government apprenticeship program through RuralPath that taught me solar panel installation. This skill is now helping me earn a stable income.",
+      quote: "I was able to connect with a government apprenticeship program through NammaDisha that taught me solar panel installation. This skill is now helping me earn a stable income.",
       role: "Solar Technician"
     },
     {
@@ -31,7 +30,7 @@ const TestimonialsSection = () => {
     <div className="bg-gray-50 section-padding">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-4">Success Stories</h2>
+          <h2 className="text-3xl font-bold mb-4">Testimonials</h2>
           <p className="text-gray-600 max-w-2xl mx-auto">
             Hear from rural youth who have transformed their lives with the right opportunities and guidance.
           </p>

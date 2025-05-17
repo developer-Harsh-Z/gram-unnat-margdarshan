@@ -57,11 +57,20 @@ const ProfileForm = () => {
   });
 
   useEffect(() => {
-    loadProfileData();
+    if (user) {
+      loadProfileData();
+    }
   }, [user]);
 
   const loadProfileData = async () => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: 'Error',
+        description: 'Please log in to view your profile.',
+        variant: 'destructive',
+      });
+      return;
+    }
     
     try {
       setLoading(true);
@@ -120,8 +129,43 @@ const ProfileForm = () => {
     }
   };
 
+  const validateForm = () => {
+    const { personal, education } = profileData;
+    
+    if (!personal.name || !personal.age || !personal.gender || !personal.language || !personal.village || !personal.district || !personal.mobile) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all personal information fields.',
+        variant: 'destructive',
+      });
+      return false;
+    }
+
+    if (!education.level || !education.passing_year || !education.institution || !education.percentage) {
+      toast({
+        title: 'Error',
+        description: 'Please fill in all education information fields.',
+        variant: 'destructive',
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async () => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: 'Error',
+        description: 'Please log in to save your profile.',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       setSaving(true);
@@ -158,142 +202,154 @@ const ProfileForm = () => {
 
   return (
     <Card className="w-full max-w-4xl mx-auto">
-      <CardHeader>
+        <CardHeader>
         <CardTitle>Profile Information</CardTitle>
-      </CardHeader>
-      <CardContent>
+        <CardDescription>Update your personal information, education details, skills, and interests.</CardDescription>
+        </CardHeader>
+        <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="personal">Personal Info</TabsTrigger>
+              <TabsTrigger value="personal">Personal Info</TabsTrigger>
             <TabsTrigger value="education">Education</TabsTrigger>
             <TabsTrigger value="skills">Skills</TabsTrigger>
             <TabsTrigger value="interests">Interests</TabsTrigger>
-          </TabsList>
-
+            </TabsList>
+            
           <TabsContent value="personal" className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label>Full Name</label>
+                <div className="space-y-2">
+                <Label>Full Name</Label>
                 <Input
                   value={profileData.personal.name}
                   onChange={(e) => handleInputChange('personal', 'name', e.target.value)}
+                  placeholder="Enter your full name"
                 />
-              </div>
-              <div className="space-y-2">
-                <label>Age</label>
+                </div>
+                <div className="space-y-2">
+                <Label>Age</Label>
                 <Input
                   type="number"
-                  value={profileData.personal.age}
-                  onChange={(e) => handleInputChange('personal', 'age', parseInt(e.target.value))}
+                  value={profileData.personal.age || ''}
+                  onChange={(e) => {
+                    const value = e.target.value === '' ? 0 : parseInt(e.target.value);
+                    handleInputChange('personal', 'age', isNaN(value) ? 0 : value);
+                  }}
+                  placeholder="Enter your age"
+                  min="0"
+                  max="120"
                 />
               </div>
-              <div className="space-y-2">
-                <label>Gender</label>
+                <div className="space-y-2">
+                <Label>Gender</Label>
                 <Select
                   value={profileData.personal.gender}
                   onValueChange={(value) => handleInputChange('personal', 'gender', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select gender" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label>Preferred Language</label>
+                      <SelectValue placeholder="Select gender" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="male">Male</SelectItem>
+                      <SelectItem value="female">Female</SelectItem>
+                      <SelectItem value="other">Other</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                <Label>Preferred Language</Label>
                 <Select
                   value={profileData.personal.language}
                   onValueChange={(value) => handleInputChange('personal', 'language', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select language" />
-                  </SelectTrigger>
-                  <SelectContent>
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
                     <SelectItem value="hindi">Hindi</SelectItem>
-                    <SelectItem value="english">English</SelectItem>
-                  </SelectContent>
-                </Select>
+                      <SelectItem value="english">English</SelectItem>
+                    </SelectContent>
+                  </Select>
               </div>
-              <div className="space-y-2">
-                <label>Village</label>
+                <div className="space-y-2">
+                <Label>Village</Label>
                 <Input
                   value={profileData.personal.village}
                   onChange={(e) => handleInputChange('personal', 'village', e.target.value)}
+                  placeholder="Enter your village"
                 />
               </div>
-              <div className="space-y-2">
-                <label>District</label>
+                <div className="space-y-2">
+                <Label>District</Label>
                 <Input
                   value={profileData.personal.district}
                   onChange={(e) => handleInputChange('personal', 'district', e.target.value)}
+                  placeholder="Enter your district"
                 />
-              </div>
-              <div className="space-y-2">
-                <label>Mobile Number</label>
+                </div>
+                <div className="space-y-2">
+                <Label>Mobile Number</Label>
                 <Input
                   type="tel"
                   value={profileData.personal.mobile}
                   onChange={(e) => handleInputChange('personal', 'mobile', e.target.value)}
+                  placeholder="Enter your mobile number"
                 />
               </div>
-            </div>
-          </TabsContent>
-
+              </div>
+            </TabsContent>
+            
           <TabsContent value="education" className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label>Education Level</label>
+                <div className="space-y-2">
+                <Label>Education Level</Label>
                 <Select
                   value={profileData.education.level}
                   onValueChange={(value) => handleInputChange('education', 'level', value)}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select education level" />
-                  </SelectTrigger>
-                  <SelectContent>
+                      <SelectValue placeholder="Select education level" />
+                    </SelectTrigger>
+                    <SelectContent>
                     <SelectItem value="primary">Primary</SelectItem>
                     <SelectItem value="secondary">Secondary</SelectItem>
                     <SelectItem value="higher_secondary">Higher Secondary</SelectItem>
-                    <SelectItem value="graduate">Graduate</SelectItem>
-                    <SelectItem value="post_graduate">Post Graduate</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <label>Passing Year</label>
+                    <SelectItem value="bachelor">Bachelor's Degree</SelectItem>
+                    <SelectItem value="master">Master's Degree</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                <Label>Passing Year</Label>
                 <Input
-                  type="number"
                   value={profileData.education.passing_year}
                   onChange={(e) => handleInputChange('education', 'passing_year', e.target.value)}
+                  placeholder="Enter passing year"
                 />
               </div>
-              <div className="space-y-2">
-                <label>Institution</label>
+                <div className="space-y-2">
+                <Label>Institution</Label>
                 <Input
                   value={profileData.education.institution}
                   onChange={(e) => handleInputChange('education', 'institution', e.target.value)}
+                  placeholder="Enter institution name"
                 />
               </div>
               <div className="space-y-2">
-                <label>Percentage</label>
+                <Label>Percentage</Label>
                 <Input
-                  type="number"
                   value={profileData.education.percentage}
                   onChange={(e) => handleInputChange('education', 'percentage', e.target.value)}
+                  placeholder="Enter percentage"
                 />
               </div>
-            </div>
-          </TabsContent>
-
+              </div>
+            </TabsContent>
+            
           <TabsContent value="skills" className="space-y-4">
-            <div className="space-y-2">
-              <label>Technical Skills</label>
+              <div className="space-y-2">
+              <Label>Skills</Label>
               <Select
-                value=""
+                value={profileData.skills[0] || ''}
                 onValueChange={(value) => {
                   if (!profileData.skills.includes(value)) {
                     handleInputChange('skills', '', [...profileData.skills, value]);
@@ -301,15 +357,16 @@ const ProfileForm = () => {
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Add a skill" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="computer_basics">Computer Basics</SelectItem>
-                  <SelectItem value="ms_office">MS Office</SelectItem>
-                  <SelectItem value="internet">Internet</SelectItem>
-                  <SelectItem value="typing">Typing</SelectItem>
-                </SelectContent>
-              </Select>
+                  <SelectValue placeholder="Select skills" />
+                    </SelectTrigger>
+                    <SelectContent>
+                  <SelectItem value="reading">Reading</SelectItem>
+                  <SelectItem value="writing">Writing</SelectItem>
+                  <SelectItem value="speaking">Speaking</SelectItem>
+                  <SelectItem value="listening">Listening</SelectItem>
+                  <SelectItem value="computer">Computer Skills</SelectItem>
+                    </SelectContent>
+                  </Select>
               <div className="flex flex-wrap gap-2 mt-2">
                 {profileData.skills.map((skill, index) => (
                   <div
@@ -326,17 +383,17 @@ const ProfileForm = () => {
                     >
                       ×
                     </button>
-                  </div>
+                </div>
                 ))}
               </div>
-            </div>
+                </div>
           </TabsContent>
-
+              
           <TabsContent value="interests" className="space-y-4">
-            <div className="space-y-2">
-              <label>Career Interests</label>
+                <div className="space-y-2">
+              <Label>Interests</Label>
               <Select
-                value=""
+                value={profileData.interests[0] || ''}
                 onValueChange={(value) => {
                   if (!profileData.interests.includes(value)) {
                     handleInputChange('interests', '', [...profileData.interests, value]);
@@ -344,16 +401,16 @@ const ProfileForm = () => {
                 }}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Add an interest" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="agriculture">Agriculture</SelectItem>
-                  <SelectItem value="handicrafts">Handicrafts</SelectItem>
-                  <SelectItem value="tourism">Tourism</SelectItem>
+                  <SelectValue placeholder="Select interests" />
+                    </SelectTrigger>
+                    <SelectContent>
                   <SelectItem value="education">Education</SelectItem>
+                  <SelectItem value="technology">Technology</SelectItem>
+                  <SelectItem value="agriculture">Agriculture</SelectItem>
                   <SelectItem value="healthcare">Healthcare</SelectItem>
-                </SelectContent>
-              </Select>
+                  <SelectItem value="business">Business</SelectItem>
+                    </SelectContent>
+                  </Select>
               <div className="flex flex-wrap gap-2 mt-2">
                 {profileData.interests.map((interest, index) => (
                   <div
@@ -370,15 +427,18 @@ const ProfileForm = () => {
                     >
                       ×
                     </button>
-                  </div>
+                </div>
                 ))}
               </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+              </div>
+            </TabsContent>
+          </Tabs>
 
-        <div className="flex justify-end mt-6">
-          <Button onClick={handleSubmit} disabled={saving}>
+        <div className="mt-6 flex justify-end">
+          <Button
+            onClick={handleSubmit}
+            disabled={saving}
+          >
             {saving ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -389,8 +449,8 @@ const ProfileForm = () => {
             )}
           </Button>
         </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
   );
 };
 

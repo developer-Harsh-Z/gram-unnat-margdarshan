@@ -10,17 +10,20 @@ export const ProfileService = {
   // Get user profile data
   getUserProfile: async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('users')
-        .select('*')
-        .eq('id', userId)
-        .single();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+        .eq('id', user.id)
+        .maybeSingle();
 
       if (error) {
         console.error('Error fetching user profile:', error);
         throw error;
       }
-      return data as UserProfile;
+      return data as UserProfile | null;
     } catch (error) {
       console.error('Error in getUserProfile:', error);
       throw error;
@@ -30,17 +33,20 @@ export const ProfileService = {
   // Get user education data
   getUserEducation: async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('education')
-        .select('*')
-        .eq('user_id', userId)
-        .single();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
 
-      if (error && error.code !== 'PGRST116') {
+    const { data, error } = await supabase
+      .from('education')
+      .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (error) {
         console.error('Error fetching education:', error);
         throw error;
       }
-      return data as Education | null;
+    return data as Education | null;
     } catch (error) {
       console.error('Error in getUserEducation:', error);
       throw error;
@@ -50,16 +56,19 @@ export const ProfileService = {
   // Get user skills
   getUserSkills: async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('user_skills')
-        .select('skill')
-        .eq('user_id', userId);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
+    const { data, error } = await supabase
+      .from('user_skills')
+      .select('skill')
+        .eq('user_id', user.id);
 
       if (error) {
         console.error('Error fetching skills:', error);
         throw error;
       }
-      return data.map(item => item.skill);
+      return data?.map(item => item.skill) || [];
     } catch (error) {
       console.error('Error in getUserSkills:', error);
       throw error;
@@ -69,16 +78,19 @@ export const ProfileService = {
   // Get user interests
   getUserInterests: async (userId: string) => {
     try {
-      const { data, error } = await supabase
-        .from('user_interests')
-        .select('interest')
-        .eq('user_id', userId);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
+    const { data, error } = await supabase
+      .from('user_interests')
+      .select('interest')
+        .eq('user_id', user.id);
 
       if (error) {
         console.error('Error fetching interests:', error);
         throw error;
       }
-      return data.map(item => item.interest);
+      return data?.map(item => item.interest) || [];
     } catch (error) {
       console.error('Error in getUserInterests:', error);
       throw error;
@@ -96,63 +108,69 @@ export const ProfileService = {
     mobile: string;
   }) => {
     try {
-      // Check if user already exists
-      const { data: existingUser, error: checkError } = await supabase
-        .from('users')
-        .select('id')
-        .eq('id', userId)
-        .single();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
 
-      if (checkError && checkError.code !== 'PGRST116') {
+    // Check if user already exists
+      const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('id')
+        .eq('id', user.id)
+        .maybeSingle();
+
+      if (checkError) {
         console.error('Error checking existing user:', checkError);
         throw checkError;
       }
 
-      if (existingUser) {
-        // Update existing user
-        const { data, error } = await supabase
-          .from('users')
-          .update({
+    if (existingUser) {
+      // Update existing user
+      const { data, error } = await supabase
+        .from('users')
+        .update({
             full_name: personalInfo.name,
+          age: personalInfo.age,
+          gender: personalInfo.gender,
+          language: personalInfo.language,
+          village: personalInfo.village,
+          district: personalInfo.district,
+          mobile: personalInfo.mobile,
+          updated_at: new Date().toISOString(),
+        })
+          .eq('id', user.id)
+          .select()
+          .single();
+
+        if (error) {
+          console.error('Error updating user:', error);
+          throw error;
+        }
+        return data;
+    } else {
+      // Create new user
+      const { data, error } = await supabase
+        .from('users')
+        .insert([
+          {
+              id: user.id,
+              email: user.email,
+              full_name: personalInfo.name,
             age: personalInfo.age,
             gender: personalInfo.gender,
             language: personalInfo.language,
             village: personalInfo.village,
             district: personalInfo.district,
             mobile: personalInfo.mobile,
-            updated_at: new Date().toISOString(),
-          })
-          .eq('id', userId)
-          .select();
-
-        if (error) {
-          console.error('Error updating user:', error);
-          throw error;
-        }
-        return data[0];
-      } else {
-        // Create new user
-        const { data, error } = await supabase
-          .from('users')
-          .insert([
-            {
-              id: userId,
-              full_name: personalInfo.name,
-              age: personalInfo.age,
-              gender: personalInfo.gender,
-              language: personalInfo.language,
-              village: personalInfo.village,
-              district: personalInfo.district,
-              mobile: personalInfo.mobile,
-            }
-          ])
-          .select();
+          }
+        ])
+          .select()
+          .single();
 
         if (error) {
           console.error('Error creating user:', error);
           throw error;
         }
-        return data[0];
+        return data;
       }
     } catch (error) {
       console.error('Error in savePersonalInfo:', error);
@@ -168,56 +186,62 @@ export const ProfileService = {
     percentage: string;
   }) => {
     try {
-      // Check if education record already exists
-      const { data: existingEducation, error: checkError } = await supabase
-        .from('education')
-        .select('id')
-        .eq('user_id', userId)
-        .single();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
 
-      if (checkError && checkError.code !== 'PGRST116') {
+    // Check if education record already exists
+      const { data: existingEducation, error: checkError } = await supabase
+      .from('education')
+      .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+
+      if (checkError) {
         console.error('Error checking existing education:', checkError);
         throw checkError;
       }
 
-      if (existingEducation) {
-        // Update existing education
-        const { data, error } = await supabase
-          .from('education')
-          .update({
-            level: educationInfo.level,
-            passing_year: educationInfo.passing_year,
-            institution: educationInfo.institution,
-            percentage: educationInfo.percentage,
-          })
-          .eq('id', existingEducation.id)
-          .select();
+    if (existingEducation) {
+      // Update existing education
+      const { data, error } = await supabase
+        .from('education')
+        .update({
+          level: educationInfo.level,
+          passing_year: educationInfo.passing_year,
+          institution: educationInfo.institution,
+          percentage: educationInfo.percentage,
+            updated_at: new Date().toISOString(),
+        })
+        .eq('id', existingEducation.id)
+          .select()
+          .single();
 
         if (error) {
           console.error('Error updating education:', error);
           throw error;
         }
-        return data[0];
-      } else {
-        // Create new education record
-        const { data, error } = await supabase
-          .from('education')
-          .insert([
-            {
-              user_id: userId,
-              level: educationInfo.level,
-              passing_year: educationInfo.passing_year,
-              institution: educationInfo.institution,
-              percentage: educationInfo.percentage,
-            }
-          ])
-          .select();
+        return data;
+    } else {
+      // Create new education record
+      const { data, error } = await supabase
+        .from('education')
+        .insert([
+          {
+              user_id: user.id,
+            level: educationInfo.level,
+            passing_year: educationInfo.passing_year,
+            institution: educationInfo.institution,
+            percentage: educationInfo.percentage,
+          }
+        ])
+          .select()
+          .single();
 
         if (error) {
           console.error('Error creating education:', error);
           throw error;
         }
-        return data[0];
+        return data;
       }
     } catch (error) {
       console.error('Error in saveEducationInfo:', error);
@@ -228,35 +252,36 @@ export const ProfileService = {
   // Save skills
   saveSkills: async (userId: string, skills: string[]) => {
     try {
-      // Delete existing skills
-      const { error: deleteError } = await supabase
-        .from('user_skills')
-        .delete()
-        .eq('user_id', userId);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
+    // Delete existing skills
+    const { error: deleteError } = await supabase
+      .from('user_skills')
+      .delete()
+        .eq('user_id', user.id);
 
       if (deleteError) {
         console.error('Error deleting skills:', deleteError);
         throw deleteError;
       }
 
-      // Add new skills
-      if (skills.length > 0) {
-        const skillsToInsert = skills.map(skill => ({
-          user_id: userId,
-          skill
-        }));
+    // Add new skills
+    if (skills.length > 0) {
+      const skillsToInsert = skills.map(skill => ({
+          user_id: user.id,
+        skill
+      }));
 
-        const { error } = await supabase
-          .from('user_skills')
-          .insert(skillsToInsert);
+      const { error } = await supabase
+        .from('user_skills')
+        .insert(skillsToInsert);
 
         if (error) {
           console.error('Error inserting skills:', error);
           throw error;
-        }
+    }
       }
-
-      return true;
     } catch (error) {
       console.error('Error in saveSkills:', error);
       throw error;
@@ -266,35 +291,36 @@ export const ProfileService = {
   // Save interests
   saveInterests: async (userId: string, interests: string[]) => {
     try {
-      // Delete existing interests
-      const { error: deleteError } = await supabase
-        .from('user_interests')
-        .delete()
-        .eq('user_id', userId);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('No authenticated user');
+
+    // Delete existing interests
+    const { error: deleteError } = await supabase
+      .from('user_interests')
+      .delete()
+        .eq('user_id', user.id);
 
       if (deleteError) {
         console.error('Error deleting interests:', deleteError);
         throw deleteError;
       }
 
-      // Add new interests
-      if (interests.length > 0) {
-        const interestsToInsert = interests.map(interest => ({
-          user_id: userId,
-          interest
-        }));
+    // Add new interests
+    if (interests.length > 0) {
+      const interestsToInsert = interests.map(interest => ({
+          user_id: user.id,
+        interest
+      }));
 
-        const { error } = await supabase
-          .from('user_interests')
-          .insert(interestsToInsert);
+      const { error } = await supabase
+        .from('user_interests')
+        .insert(interestsToInsert);
 
         if (error) {
           console.error('Error inserting interests:', error);
           throw error;
-        }
+    }
       }
-
-      return true;
     } catch (error) {
       console.error('Error in saveInterests:', error);
       throw error;

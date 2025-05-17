@@ -206,35 +206,6 @@ export interface Database {
           created_at?: string
         }
       }
-      success_stories: {
-        Row: {
-          id: string
-          created_at: string
-          title: string
-          content: string
-          author_id: string
-          image_url: string | null
-          tags: string[]
-        }
-        Insert: {
-          id?: string
-          created_at?: string
-          title: string
-          content: string
-          author_id: string
-          image_url?: string | null
-          tags?: string[]
-        }
-        Update: {
-          id?: string
-          created_at?: string
-          title?: string
-          content?: string
-          author_id?: string
-          image_url?: string | null
-          tags?: string[]
-        }
-      }
       parents_guides: {
         Row: {
           id: string

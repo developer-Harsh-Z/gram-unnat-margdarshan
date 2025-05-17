@@ -8,11 +8,13 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import ProfilePage from "./pages/ProfilePage";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
-import SuccessStoriesPage from "./pages/SuccessStoriesPage";
 import ParentsCornerPage from "./pages/ParentsCornerPage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import NotFound from "./pages/NotFound";
+import CareerQuizPage from '@/pages/CareerQuizPage';
+import CareerGuidancePage from '@/pages/CareerGuidancePage';
+import CareerChatPage from '@/pages/CareerChatPage';
 
 const queryClient = new QueryClient();
 
@@ -40,9 +42,15 @@ const App = () => (
                 <OpportunitiesPage />
               </ProtectedRoute>
             } />
-            <Route path="/stories" element={
+            <Route path="/career-quiz" element={<ProtectedRoute><CareerQuizPage /></ProtectedRoute>} />
+            <Route path="/career-guidance" element={
               <ProtectedRoute>
-                <SuccessStoriesPage />
+                <CareerGuidancePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/career-chat" element={
+              <ProtectedRoute>
+                <CareerChatPage />
               </ProtectedRoute>
             } />
             

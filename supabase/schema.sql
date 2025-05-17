@@ -52,6 +52,27 @@ ALTER TABLE public.education ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_skills ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.user_interests ENABLE ROW LEVEL SECURITY;
 
+-- Drop existing policies if they exist
+DROP POLICY IF EXISTS "Users can view their own profile" ON public.users;
+DROP POLICY IF EXISTS "Users can update their own profile" ON public.users;
+DROP POLICY IF EXISTS "Users can insert their own profile" ON public.users;
+DROP POLICY IF EXISTS "Users can delete their own profile" ON public.users;
+
+DROP POLICY IF EXISTS "Users can view their own education" ON public.education;
+DROP POLICY IF EXISTS "Users can update their own education" ON public.education;
+DROP POLICY IF EXISTS "Users can insert their own education" ON public.education;
+DROP POLICY IF EXISTS "Users can delete their own education" ON public.education;
+
+DROP POLICY IF EXISTS "Users can view their own skills" ON public.user_skills;
+DROP POLICY IF EXISTS "Users can update their own skills" ON public.user_skills;
+DROP POLICY IF EXISTS "Users can insert their own skills" ON public.user_skills;
+DROP POLICY IF EXISTS "Users can delete their own skills" ON public.user_skills;
+
+DROP POLICY IF EXISTS "Users can view their own interests" ON public.user_interests;
+DROP POLICY IF EXISTS "Users can update their own interests" ON public.user_interests;
+DROP POLICY IF EXISTS "Users can insert their own interests" ON public.user_interests;
+DROP POLICY IF EXISTS "Users can delete their own interests" ON public.user_interests;
+
 -- Create policies for users table
 CREATE POLICY "Users can view their own profile"
     ON public.users FOR SELECT
@@ -65,6 +86,10 @@ CREATE POLICY "Users can insert their own profile"
     ON public.users FOR INSERT
     WITH CHECK (auth.uid() = id);
 
+CREATE POLICY "Users can delete their own profile"
+    ON public.users FOR DELETE
+    USING (auth.uid() = id);
+
 -- Create policies for education table
 CREATE POLICY "Users can view their own education"
     ON public.education FOR SELECT
@@ -77,6 +102,10 @@ CREATE POLICY "Users can update their own education"
 CREATE POLICY "Users can insert their own education"
     ON public.education FOR INSERT
     WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own education"
+    ON public.education FOR DELETE
+    USING (auth.uid() = user_id);
 
 -- Create policies for user_skills table
 CREATE POLICY "Users can view their own skills"
@@ -110,4 +139,10 @@ CREATE POLICY "Users can insert their own interests"
 
 CREATE POLICY "Users can delete their own interests"
     ON public.user_interests FOR DELETE
-    USING (auth.uid() = user_id); 
+    USING (auth.uid() = user_id);
+
+-- Grant necessary permissions
+GRANT ALL ON public.users TO authenticated;
+GRANT ALL ON public.education TO authenticated;
+GRANT ALL ON public.user_skills TO authenticated;
+GRANT ALL ON public.user_interests TO authenticated; 

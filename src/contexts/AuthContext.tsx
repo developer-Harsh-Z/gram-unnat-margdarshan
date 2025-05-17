@@ -69,8 +69,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       console.log('Sign in successful:', data);
       toast({
-        title: "Login successful",
-        description: "Welcome back to RuralPath!",
+        title: "Welcome back!",
+        description: "Welcome back to NammaDisha!",
       });
     } catch (error: any) {
       console.error('Sign in error:', error.message);

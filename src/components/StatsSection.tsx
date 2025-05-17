@@ -1,10 +1,8 @@
-
 import React from 'react';
 
 const StatsSection = () => {
   const stats = [
     { value: "10,000+", label: "Rural Youth Reached" },
-    { value: "500+", label: "Success Stories" },
     { value: "200+", label: "Partner Organizations" },
     { value: "50+", label: "Districts Covered" }
   ];

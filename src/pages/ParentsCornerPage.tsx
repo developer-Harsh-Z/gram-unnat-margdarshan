@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -77,8 +76,8 @@ const ParentsCornerPage = () => {
               <a href="tel:+919876543210" className="btn-primary px-6 py-3 rounded-md inline-block">
                 Call: +91 9876543210
               </a>
-              <a href="mailto:parents@ruralpath.org" className="btn-outline px-6 py-3 rounded-md inline-block">
-                Email: parents@ruralpath.org
+              <a href="mailto:parents@nammadisha.org" className="btn-outline px-6 py-3 rounded-md inline-block">
+                Email: parents@nammadisha.org
               </a>
             </div>
           </div>

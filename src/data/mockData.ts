@@ -1,4 +1,3 @@
-
 import { Opportunity, SuccessStory, ParentsGuide, FAQ } from './models';
 
 export const opportunitiesData: Opportunity[] = [
@@ -103,61 +102,6 @@ export const opportunitiesData: Opportunity[] = [
       phone: "+91-4321098765"
     },
     createdAt: new Date("2025-05-12")
-  }
-];
-
-export const successStoriesData: SuccessStory[] = [
-  {
-    id: "1",
-    name: "Manjunath Koppal",
-    age: 26,
-    location: "Koppal, North Karnataka",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    story: "From a farming family with limited resources to becoming a solar installation technician with a stable income.",
-    occupation: "Solar Panel Technician",
-    background: "Son of a small farmer, completed ITI but couldn't find work near his village",
-    journey: "Through RuralPath, Manjunath discovered a solar technician training program with accommodation provided. After completing the 4-month program, he was placed with a solar company that installs panels in rural areas. He now earns ₹18,000 per month.",
-    advice: "Don't limit yourself to traditional jobs. New green technology sectors offer great opportunities even in rural areas.",
-    createdAt: new Date("2025-04-01")
-  },
-  {
-    id: "2",
-    name: "Lakshmi Patil",
-    age: 23,
-    location: "Bagalkot, North Karnataka",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    story: "A school dropout who became a community health worker, now pursuing nursing studies through a scholarship.",
-    occupation: "Community Health Worker",
-    background: "Had to drop out after 10th standard to help family, interested in healthcare but no guidance",
-    journey: "Lakshmi found a 6-month community health worker program through RuralPath that allowed her to train while staying in her village. After certification, she started working at the local PHC. Her performance led to a scholarship for nursing studies.",
-    advice: "Start with whatever opportunity is available to you locally, perform well, and you can build towards your dream career step by step.",
-    createdAt: new Date("2025-03-15")
-  },
-  {
-    id: "3",
-    name: "Basavaraj Hiremath",
-    age: 28,
-    location: "Gadag, North Karnataka",
-    image: "https://images.unsplash.com/photo-1542190891-2093d38760f2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    story: "Transformed from an unemployed graduate to a successful digital marketing entrepreneur serving local businesses.",
-    occupation: "Digital Marketing Entrepreneur",
-    background: "B.A. graduate who couldn't find suitable employment for two years after college",
-    journey: "Through RuralPath's digital skills program, Basavaraj learned about online marketing. He started by helping local shops create social media presence, then expanded to build a small agency that now serves businesses across North Karnataka with a team of three people.",
-    advice: "Look for problems around you that need solving. Sometimes the best opportunity is creating a service that your community needs.",
-    createdAt: new Date("2025-02-20")
-  },
-  {
-    id: "4",
-    name: "Anitha Yadrami",
-    age: 24,
-    location: "Bidar, North Karnataka",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80",
-    story: "From helping at her family's small tailoring shop to becoming a skilled fashion design assistant through vocational training.",
-    occupation: "Fashion Design Assistant",
-    background: "Completed PUC, had basic tailoring skills from family business but wanted to advance",
-    journey: "Anitha discovered a specialized garment design course through RuralPath that offered scholarships for rural women with basic tailoring skills. After the 8-month program, she found work with a designer in Bengaluru who values her knowledge of traditional embroidery techniques.",
-    advice: "Your rural background and traditional skills can become your unique strength in the modern job market. Don't undervalue them.",
-    createdAt: new Date("2025-01-25")
   }
 ];
 

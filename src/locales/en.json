@@ -1,0 +1,52 @@
+{
+  "appName": "NammaDisha",
+  "home": "Home",
+  "myProfile": "My Profile",
+  "opportunities": "Opportunities",
+  "parentsCorner": "Parents Corner",
+  "login": "Login",
+  "logout": "Logout",
+  "signup": "Sign Up",
+  "welcome": "Welcome to NammaDisha!",
+  "featuresTitle": "How NammaDisha Helps You",
+  "ctaTitle": "Ready to Start Your Journey?",
+  "ctaDesc": "Create your profile today and discover personalized opportunities that match your background, interests, and career goals.",
+  "createProfile": "Create Your Profile",
+  "exploreOpportunities": "Explore Opportunities",
+  "features": {
+    "education": {
+      "title": "Personalized Assessment",
+      "description": "Discover your strengths, interests, and aptitudes through our tailored assessment tools designed specifically for rural backgrounds."
+    },
+    "community": {
+      "title": "Local Opportunities",
+      "description": "Connect with local employers, apprenticeships, and job roles that are accessible from your location and suit your skill set."
+    },
+    "career": {
+      "title": "Government Schemes",
+      "description": "Stay updated on relevant government schemes, scholarships, and initiatives that can support your career journey."
+    },
+    "skills": {
+      "title": "Skill Development",
+      "description": "Access curated training programs, courses, and resources that match your profile and help you develop in-demand skills."
+    }
+  },
+  "chatbot": {
+    "title": "Career Guidance Assistant",
+    "welcome": "Hello! I'm your career guidance assistant. How can I help you today?",
+    "placeholder": "Type your message here...",
+    "defaultResponse": "I understand you're interested in career guidance. Could you tell me more about your background and interests?",
+    "suggestions": [
+      "What career options are available in my field?",
+      "How can I improve my skills?",
+      "What are the best courses for my career?",
+      "Tell me about government schemes"
+    ]
+  },
+  "quickLinks": "Quick Links",
+  "resources": "Resources",
+  "contact": "Contact",
+  "governmentSchemes": "Government Schemes",
+  "skillPrograms": "Skill Programs",
+  "scholarships": "Scholarships"
+} 
